@@ -15,6 +15,17 @@ export default defineConfig({
 				background_color: "#ffffff",
 				theme_color: "#ffffff",
 			},
+			workbox: {
+				runtimeCaching: [
+					{
+						urlPattern: /^https:\/\/cdn\.tldraw\.com\//,
+						handler: "CacheFirst",
+						options: {
+							cacheName: "tldraw-assets",
+						},
+					},
+				],
+			},
 		}),
 	],
 	server: { port: 5174 },

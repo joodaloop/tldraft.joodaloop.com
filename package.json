@@ -1,5 +1,5 @@
 {
-  "name": "tldraw-client",
+  "name": "tldraft-client",
   "private": true,
   "scripts": {
     "dev": "vite"
