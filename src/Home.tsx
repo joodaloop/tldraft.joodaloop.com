@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useFiles } from "./useFiles";
 
 export function Home() {
-	const { files, createFile } = useFiles();
+	const { files, createFile, deleteFile } = useFiles();
 	const [newName, setNewName] = useState("");
 
 	async function handleCreate() {
@@ -38,10 +38,20 @@ export function Home() {
 			{files.length === 0 && <p>No boards yet.</p>}
 			<ul>
 				{files.map((file) => (
-					<li key={file.slug}>
+					<li key={file.slug} style={{ display: "flex", alignItems: "center", gap: 8 }}>
 						<Link href={`/board/${encodeURIComponent(file.slug)}`}>
 							{file.name}
 						</Link>
+						<button
+							onClick={() => {
+								if (confirm(`Delete "${file.name}"?`)) {
+									deleteFile(file.slug).catch((e) => console.error("Failed to delete:", e));
+								}
+							}}
+							style={{ padding: "2px 8px", fontSize: 12, cursor: "pointer" }}
+						>
+							Delete
+						</button>
 					</li>
 				))}
 			</ul>

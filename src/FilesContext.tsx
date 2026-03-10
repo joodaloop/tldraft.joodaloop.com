@@ -12,6 +12,7 @@ interface FilesContextValue {
 	files: BoardFile[];
 	refreshFiles: () => Promise<void>;
 	createFile: (name: string) => Promise<void>;
+	deleteFile: (slug: string) => Promise<void>;
 }
 
 export const FilesContext = createContext<FilesContextValue | null>(null);
@@ -52,8 +53,22 @@ export function FilesProvider({ children }: { children: ReactNode }) {
 		[refreshFiles, navigate]
 	);
 
+	const deleteFile = useCallback(
+		async (slug: string) => {
+			const res = await fetch(`${API_BASE}/api/files/${encodeURIComponent(slug)}`, {
+				method: "DELETE",
+			});
+			if (!res.ok) {
+				const err = await res.text();
+				throw new Error(err);
+			}
+			await refreshFiles();
+		},
+		[refreshFiles]
+	);
+
 	return (
-		<FilesContext.Provider value={{ files, refreshFiles, createFile }}>
+		<FilesContext.Provider value={{ files, refreshFiles, createFile, deleteFile }}>
 			{children}
 		</FilesContext.Provider>
 	);
