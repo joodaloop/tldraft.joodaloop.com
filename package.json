@@ -5,10 +5,12 @@
     "dev": "vite"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.2.1",
     "@tldraw/sync": "^3.9.0",
     "cmdk": "^1.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tailwindcss": "^4.2.1",
     "tldraw": "^3.9.0",
     "wouter": "^3.3.5"
   },

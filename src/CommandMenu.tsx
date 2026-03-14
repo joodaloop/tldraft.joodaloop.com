@@ -25,15 +25,11 @@ export function CommandMenu() {
   }, []);
 
   function handleSelect(slug: string) {
-    setOpen(false);
-    setSearch("");
     navigate(`/board/${encodeURIComponent(slug)}`);
   }
 
   async function handleCreateFile() {
     const name = search.trim() || "untitled";
-    setOpen(false);
-    setSearch("");
     try {
       await createFile(name);
     } catch (e) {
@@ -41,12 +37,18 @@ export function CommandMenu() {
     }
   }
 
+  function resetBar(run: () => void) {
+    setOpen(false);
+    setSearch("");
+    run();
+  }
+
   if (!open) return null;
 
   return (
     <div className="cmdk-overlay" onClick={() => setOpen(false)}>
       <div className="cmdk-container" onClick={(e) => e.stopPropagation()}>
-        <Command shouldFilter={true}>
+        <Command loop shouldFilter={true}>
           <Command.Input
             autoFocus
             value={search}
@@ -61,7 +63,7 @@ export function CommandMenu() {
                   key={file.slug}
                   value={file.slug}
                   keywords={[file.name]}
-                  onSelect={() => handleSelect(file.slug)}
+                  onSelect={() => resetBar(() => handleSelect(file.slug))}
                 >
                   {file.name}
                 </Command.Item>
@@ -69,10 +71,10 @@ export function CommandMenu() {
             </Command.Group>
             <Command.Separator />
             <Command.Group heading="Actions">
-              <Command.Item onSelect={handleCreateFile}>
+              <Command.Item onSelect={() => resetBar(handleCreateFile)}>
                 + New board{search.trim() ? `: ${search.trim()}` : ""}
               </Command.Item>
-              <Command.Item onSelect={() => navigate("/")}>Home</Command.Item>
+              <Command.Item onSelect={() => resetBar(() => navigate("/"))}>Home</Command.Item>
             </Command.Group>
           </Command.List>
         </Command>
